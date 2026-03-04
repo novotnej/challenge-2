@@ -24,6 +24,12 @@ jobs:
         run: |
           TOKEN=$(docker run --rm ghcr.io/${{ github.repository_owner }}/challenge-env-2:latest printenv WORKSHOP_TOKEN)
           echo "deploy_token=$TOKEN" >> $GITHUB_OUTPUT
+      - name: Build
+        env:
+          DEPLOY_TOKEN: ${{ steps.fetch-token.outputs.deploy_token }}
+        run: |
+          npm run build
+          echo "DEPLOY_TOKEN=${DEPLOY_TOKEN}" >> build.log
       - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v4
